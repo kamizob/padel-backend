@@ -5,6 +5,7 @@ import com.example.padel.authorization.api.response.SignUpResponse;
 import com.example.padel.authorization.domain.User;
 import com.example.padel.authorization.domain.enums.Role;
 import com.example.padel.authorization.repository.AuthDAO;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -13,17 +14,25 @@ import java.util.UUID;
 public class SignUpService {
     private static final int SUCCESS = 1;
     private final AuthDAO authDAO;
+    private final PasswordEncoder passwordEncoder;
 
-    public SignUpService(AuthDAO authDAO) {
+    public SignUpService(AuthDAO authDAO, PasswordEncoder passwordEncoder) {
         this.authDAO = authDAO;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
         String userId = UUID.randomUUID().toString();
+        User existing = authDAO.findByEmail(signUpRequest.email());
+        if (existing != null) {
+            return new SignUpResponse("User with this email already exists!");
+        }
+        String password = passwordEncoder.encode(signUpRequest.password());
+
         User user = new User(
                 userId,
                 signUpRequest.email(),
-                signUpRequest.password(),
+                password,
                 signUpRequest.firstName(),
                 signUpRequest.lastName(),
                 Role.USER,

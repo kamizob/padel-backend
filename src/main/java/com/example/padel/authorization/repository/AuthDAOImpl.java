@@ -1,6 +1,7 @@
 package com.example.padel.authorization.repository;
 
 import com.example.padel.authorization.domain.User;
+import com.example.padel.authorization.domain.enums.Role;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,6 +28,24 @@ public class AuthDAOImpl implements AuthDAO {
                 VALUES (:id, :email, :password, :firstName, :lastName, :role, :isVerified)""";
         return namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM app_user WHERE email = :email";
+        MapSqlParameterSource params = new MapSqlParameterSource("email", email);
+
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) ->
+                new User(
+                        rs.getString("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        Role.valueOf(rs.getString("role")),
+                        rs.getBoolean("is_verified")
+                )
+        ).stream().findFirst().orElse(null);
+    }
+
 
 
 }
