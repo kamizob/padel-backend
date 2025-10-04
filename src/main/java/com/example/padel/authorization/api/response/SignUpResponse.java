@@ -1,4 +1,4 @@
 package com.example.padel.authorization.api.response;
 
-public record SignUpResponse() {
+public record SignUpResponse(String message) {
 }

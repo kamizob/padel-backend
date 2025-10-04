@@ -20,7 +20,16 @@ repositories {
 }
 
 dependencies {
+    // --- WEB ---
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // --- JDBC (čia pagrindinis, kuris suteikia NamedParameterJdbcTemplate) ---
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+
+    // --- DATABASE DRIVER ---
+    implementation 'org.postgresql:postgresql:42.7.2'
+
+    // --- TESTS ---
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
