@@ -25,6 +25,9 @@ public class LoginService {
         if (user == null) {
             throw new RuntimeException("User nor found with email: " + request.email());
         }
+        if(!user.isVerified()) {
+            throw new RuntimeException("Please verify your email before logging in!");
+        }
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }

@@ -2,7 +2,6 @@ package com.example.padel.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,12 +12,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // išjungiam CSRF (Postman testavimui)
+                .csrf(csrf -> csrf.disable()) // išjungiam CSRF testavimui
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // leidžiam signup/login
-                        .anyRequest().authenticated() // visa kita — apsaugota
+                        .requestMatchers(
+                                "/api/auth/signup",
+                                "/api/auth/login",
+                                "/api/auth/verify/**" // pridėk šitą, kad el. pašto nuoroda veiktų
+                        ).permitAll() // leidžiam viešus endpointus
+                        .anyRequest().authenticated() // kiti endpointai – tik su token
                 )
-                .httpBasic(Customizer.withDefaults()); // galima testuoti paprastai
+                .httpBasic(httpBasic -> httpBasic.disable()) // išjungiam Basic Auth
+                .formLogin(form -> form.disable()); // išjungiam form login
 
         return http.build();
     }

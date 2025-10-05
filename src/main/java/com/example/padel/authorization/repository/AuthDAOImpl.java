@@ -45,6 +45,12 @@ public class AuthDAOImpl implements AuthDAO {
                 )
         ).stream().findFirst().orElse(null);
     }
+    @Override
+    public int verifyUserByEmail(String email) {
+        String sql = "UPDATE app_user SET is_verified = true WHERE email = :email";
+        MapSqlParameterSource params = new MapSqlParameterSource("email", email);
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
 
 
 

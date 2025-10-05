@@ -5,6 +5,7 @@ import com.example.padel.authorization.api.response.SignUpResponse;
 import com.example.padel.authorization.domain.User;
 import com.example.padel.authorization.domain.enums.Role;
 import com.example.padel.authorization.repository.AuthDAO;
+import com.example.padel.config.VerificationTokenService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,16 @@ public class SignUpService {
     private static final int SUCCESS = 1;
     private final AuthDAO authDAO;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final VerificationTokenService verificationTokenService;
 
-    public SignUpService(AuthDAO authDAO, PasswordEncoder passwordEncoder) {
+    public SignUpService(AuthDAO authDAO, PasswordEncoder passwordEncoder, EmailService emailService,
+                         VerificationTokenService verificationTokenService) {
+
         this.authDAO = authDAO;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+        this.verificationTokenService = verificationTokenService;
     }
 
     public SignUpResponse signUp(SignUpRequest signUpRequest) {
@@ -41,10 +48,11 @@ public class SignUpService {
         int result = authDAO.signUp(user);
         if (result != SUCCESS) {
             return new SignUpResponse("Sign up failed");
-        } else {
-            return new SignUpResponse("Sign up successful");
         }
+        String token = verificationTokenService.generateVerificationToken(user.getEmail());
+        String link = "http://localhost:8080/api/auth/verify?token=" + token;
 
-
+        emailService.sendVerificationEmail(user.getEmail(), link);
+        return new SignUpResponse("Sign up successful! Please verify your email.");
     }
 }
