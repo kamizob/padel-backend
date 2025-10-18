@@ -23,6 +23,8 @@ dependencies {
     // --- WEB ---
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 
     // --- JDBC (čia pagrindinis, kuris suteikia NamedParameterJdbcTemplate) ---
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
