@@ -6,6 +6,8 @@ import com.example.padel.authorization.domain.User;
 import com.example.padel.authorization.domain.enums.Role;
 import com.example.padel.authorization.repository.AuthDAO;
 import com.example.padel.config.VerificationTokenService;
+import com.example.padel.exception.custom.EmailAlreadyExistsException;
+import com.example.padel.exception.custom.SignUpFailedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +34,7 @@ public class SignUpService {
         String userId = UUID.randomUUID().toString();
         User existing = authDAO.findByEmail(signUpRequest.email());
         if (existing != null) {
-            return new SignUpResponse("User with this email already exists!");
+            throw new EmailAlreadyExistsException("User with this email already exists!");
         }
         String password = passwordEncoder.encode(signUpRequest.password());
 
@@ -47,7 +49,7 @@ public class SignUpService {
         );
         int result = authDAO.signUp(user);
         if (result != SUCCESS) {
-            return new SignUpResponse("Sign up failed");
+            throw new SignUpFailedException("Sign up failed. Please try again later.");
         }
         String token = verificationTokenService.generateVerificationToken(user.getEmail());
         String link = "http://localhost:8080/api/auth/verify?token=" + token;

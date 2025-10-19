@@ -5,6 +5,9 @@ import com.example.padel.authorization.api.response.LoginResponse;
 import com.example.padel.authorization.domain.User;
 import com.example.padel.authorization.repository.AuthDAO;
 import com.example.padel.config.JwtService;
+import com.example.padel.exception.custom.InvalidPasswordException;
+import com.example.padel.exception.custom.UserNotFoundException;
+import com.example.padel.exception.custom.UserNotVerifiedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +26,13 @@ public class LoginService {
     public LoginResponse login(LoginRequest request) {
         User user = authDAO.findByEmail(request.email());
         if (user == null) {
-            throw new RuntimeException("User nor found with email: " + request.email());
+            throw new UserNotFoundException("User not found with email: " + request.email());
         }
         if(!user.isVerified()) {
-            throw new RuntimeException("Please verify your email before logging in!");
+            throw new UserNotVerifiedException("Please verify your email before logging in!");
         }
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new InvalidPasswordException("Invalid password");
         }
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
         return new LoginResponse(token);
