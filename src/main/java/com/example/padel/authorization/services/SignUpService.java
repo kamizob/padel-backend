@@ -30,7 +30,7 @@ public class SignUpService {
         this.verificationTokenService = verificationTokenService;
     }
 
-    public SignUpResponse signUp(SignUpRequest signUpRequest) {
+    public SignUpResponse createUser(SignUpRequest signUpRequest, Role role, boolean isVerified, String successMsg) {
         String userId = UUID.randomUUID().toString();
         User existing = authDAO.findByEmail(signUpRequest.email());
         if (existing != null) {
@@ -44,17 +44,27 @@ public class SignUpService {
                 password,
                 signUpRequest.firstName(),
                 signUpRequest.lastName(),
-                Role.USER,
-                false
+                role,
+                isVerified
         );
         int result = authDAO.signUp(user);
         if (result != SUCCESS) {
             throw new SignUpFailedException("Sign up failed. Please try again later.");
         }
-        String token = verificationTokenService.generateVerificationToken(user.getEmail());
-        String link = "http://localhost:8080/api/auth/verify?token=" + token;
+        if(!isVerified) {
+            String token = verificationTokenService.generateVerificationToken(user.getEmail());
+            String link = "http://localhost:8080/api/auth/verify?token=" + token;
+            emailService.sendVerificationEmail(user.getEmail(), link);
+        }
 
-        emailService.sendVerificationEmail(user.getEmail(), link);
-        return new SignUpResponse("Sign up successful! Please verify your email.");
+        return new SignUpResponse(successMsg);
     }
+    public SignUpResponse signUp(SignUpRequest r) {
+        return createUser(r, Role.USER, false, "Sign up successful! Please verify your email.");
+    }
+
+    public SignUpResponse signUpAdmin(SignUpRequest r) {
+        return createUser(r, Role.ADMIN, true, "Admin account created successfully!");
+    }
+
 }

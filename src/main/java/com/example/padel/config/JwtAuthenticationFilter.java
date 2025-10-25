@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -22,6 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     public JwtAuthenticationFilter(JwtService jwtService) {
         this.jwtService = jwtService;
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -39,14 +41,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Paimam token (be "Bearer ")
         final String jwt = authHeader.substring(7);
         final String userEmail = jwtService.exctractUsername(jwt);
+        final String role = jwtService.extractRole(jwt);
 
         // Jei dar neprisijungęs vartotojas — sukurti authentication objektą
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+            var authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+
             UsernamePasswordAuthenticationToken authToken =
                     new UsernamePasswordAuthenticationToken(
-                            new User(userEmail, "", Collections.emptyList()),
+                            new User(userEmail, "", authorities),
                             null,
-                            Collections.emptyList()
+                            authorities
                     );
 
             authToken.setDetails(
@@ -57,5 +63,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 }

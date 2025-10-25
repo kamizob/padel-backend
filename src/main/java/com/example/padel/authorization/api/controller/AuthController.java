@@ -44,6 +44,12 @@ public class AuthController {
     public SignUpResponse signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         return signUpService.signUp(signUpRequest);
     }
+    @PostMapping("/signup/admin")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SignUpResponse signupAdmin(@Valid @RequestBody SignUpRequest signUpRequest) {
+        return signUpService.signUpAdmin(signUpRequest);
+    }
+
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
