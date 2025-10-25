@@ -10,3 +10,19 @@ CREATE TABLE app_user
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+CREATE TABLE court
+(
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    location VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
+    open_time TIME,
+    close_time TIME,
+    slot_minutes INT CHECK (slot_minutes > 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CHECK (close_time > open_time)
+);
+INSERT INTO court (id, name, location, open_time, close_time, slot_minutes)
+VALUES ('1', 'Court 1', 'Vilnius', '08:00:00', '22:00:00', 60);
+
