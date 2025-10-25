@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CourtDAO {
     List<Court> findAllActive();
+    int createCourt(Court court);
 }

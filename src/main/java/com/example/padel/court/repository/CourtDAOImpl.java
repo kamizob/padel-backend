@@ -1,6 +1,7 @@
 package com.example.padel.court.repository;
 
 import com.example.padel.court.domain.Court;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -29,17 +30,33 @@ public class CourtDAOImpl implements CourtDAO {
 
     }
     private Court mapRowToCourt(ResultSet rs) throws SQLException {
-        Court court = new Court();
-        court.setId(rs.getString("id"));
-        court.setName(rs.getString("name"));
-        court.setLocation(rs.getString("location"));
-        court.setActive(rs.getBoolean("is_active"));
-        court.setOpeningTime(rs.getObject("open_time", LocalTime.class));
-        court.setClosingTime(rs.getObject("close_time", LocalTime.class));
-        court.setSlotMinutes(rs.getInt("slot_minutes"));
-        court.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-        court.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
-        return court;
+        return new Court(
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("location"),
+                rs.getBoolean("is_active"),
+                rs.getObject("open_time", LocalTime.class),
+                rs.getObject("close_time", LocalTime.class),
+                rs.getInt("slot_minutes")
+        );
+    }
+
+    @Override
+    public int createCourt(Court court) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id",  court.id())
+                .addValue("name",  court.name())
+                .addValue("location",  court.location())
+                .addValue("is_active", court.isActive())
+                .addValue("open_time", court.openingTime())
+                .addValue("close_time", court.closingTime())
+                .addValue("slot_minutes", court.slotMinutes());
+
+        String sql = """
+                INSERT INTO court (id, name, location, is_active, open_time, close_time, slot_minutes)
+                VALUES (:id, :name, :location, :is_active, :open_time, :close_time, :slot_minutes)
+        """;
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
 
