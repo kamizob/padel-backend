@@ -7,4 +7,5 @@ import java.util.List;
 public interface CourtDAO {
     List<Court> findAllActive();
     int createCourt(Court court);
+    int updateCourtActivity(String id, boolean isActive);
 }

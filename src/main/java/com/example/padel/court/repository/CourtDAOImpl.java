@@ -58,6 +58,18 @@ public class CourtDAOImpl implements CourtDAO {
         """;
         return namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public int updateCourtActivity(String id, boolean isActive) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id",  id)
+                .addValue("is_active", isActive);
+        String sql = """
+                UPDATE court 
+                SET is_active = :is_active,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = :id""";
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
 
 
 

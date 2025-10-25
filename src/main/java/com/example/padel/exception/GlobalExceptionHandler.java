@@ -37,7 +37,9 @@ public class GlobalExceptionHandler {
 
     // --- 500 SERVER ERROR group (unexpected/internal issues) ---
     @ExceptionHandler({
-            SignUpFailedException.class
+            SignUpFailedException.class,
+            FailedCreateCourtException.class,
+            FailedUpdateCourtException.class
     })
     public ResponseEntity<Map<String, String>> handleServerError(RuntimeException ex) {
         return ResponseEntity
