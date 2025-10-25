@@ -8,4 +8,5 @@ public interface CourtDAO {
     List<Court> findAllActive();
     int createCourt(Court court);
     int updateCourtActivity(String id, boolean isActive);
+    Court findCourtById(String id);
 }

@@ -27,7 +27,8 @@ public class GlobalExceptionHandler {
             EmailAlreadyExistsException.class,
             UserNotFoundException.class,
             UserNotVerifiedException.class,
-            InvalidPasswordException.class
+            InvalidPasswordException.class,
+            CourtNotFoundException.class
     })
     public ResponseEntity<Map<String, String>> handleBadRequest(RuntimeException ex) {
         return ResponseEntity

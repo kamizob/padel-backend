@@ -70,6 +70,12 @@ public class CourtDAOImpl implements CourtDAO {
                 WHERE id = :id""";
         return namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public Court findCourtById(String id) {
+        String sql = "SELECT * FROM court WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        return namedParameterJdbcTemplate.query(sql, params, rs -> rs.next() ? mapRowToCourt(rs) : null);
+    }
 
 
 
