@@ -46,7 +46,7 @@ public class CourtController {
         return createCourtService.createCourt(request);
     }
 
-    @PatchMapping("/{courtId}/activity")
+    @PatchMapping("/{courtId}")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UpdateCourtResponse updateCourtActivity(
@@ -55,6 +55,12 @@ public class CourtController {
     ) {
         return updateCourtService.updateCourtActivity(courtId, request);
     }
+    @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Court> getAllCourts() {
+        return courtService.getAllCourts();
+    }
+
 
 
 

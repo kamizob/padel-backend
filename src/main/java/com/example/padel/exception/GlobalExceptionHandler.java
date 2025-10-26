@@ -28,7 +28,8 @@ public class GlobalExceptionHandler {
             UserNotFoundException.class,
             UserNotVerifiedException.class,
             InvalidPasswordException.class,
-            CourtNotFoundException.class
+            CourtNotFoundException.class,
+            InvalidCourtConfigurationException.class
     })
     public ResponseEntity<Map<String, String>> handleBadRequest(RuntimeException ex) {
         return ResponseEntity

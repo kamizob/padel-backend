@@ -15,4 +15,8 @@ public class CourtService {
     public List<Court> getAllActiveCourts() {
         return courtDAO.findAllActive();
     }
+    public List<Court> getAllCourts() {
+        return courtDAO.findAll();
+    }
+
 }

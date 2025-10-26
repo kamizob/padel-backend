@@ -76,6 +76,12 @@ public class CourtDAOImpl implements CourtDAO {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.query(sql, params, rs -> rs.next() ? mapRowToCourt(rs) : null);
     }
+    @Override
+    public List<Court> findAll() {
+        String sql = "SELECT * FROM court ORDER BY created_at ASC";
+        return namedParameterJdbcTemplate.query(sql, (rs, rowNum) -> mapRowToCourt(rs));
+    }
+
 
 
 
