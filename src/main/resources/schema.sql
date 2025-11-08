@@ -26,3 +26,14 @@ CREATE TABLE court
 INSERT INTO court (id, name, location, open_time, close_time, slot_minutes)
 VALUES ('1', 'Court 1', 'Vilnius', '08:00:00', '22:00:00', 60);
 
+CREATE TABLE booking
+(
+     id VARCHAR(50) PRIMARY KEY,
+     user_id VARCHAR(50) REFERENCES app_user(id),
+     court_id VARCHAR(50) REFERENCES court(id),
+     start_time TIMESTAMP NOT NULL,
+     end_time TIMESTAMP NOT NULL,
+     is_active BOOLEAN DEFAULT TRUE,
+     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     UNIQUE (court_id, start_time)
+);
