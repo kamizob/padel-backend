@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -48,6 +49,13 @@ public class CreateBookingService {
             throw  new InvalidCourtConfigurationException("Start and end time are not valid");
 
         }
+        List<Booking> existingBookings = bookingDAO.findByCourtId(bookingRequest.courtId());
+        boolean overlaps = existingBookings.stream()
+                .filter(Booking::isActive)
+                .anyMatch(b -> startTime.isBefore(b.endTime()) && endTime.isAfter(b.startTime()));
+        if (overlaps)
+            throw new InvalidCourtConfigurationException("Selected time slot is already booked.");
+
 
         int startHour = startTime.getHour();
         int endHour = endTime.getHour();
