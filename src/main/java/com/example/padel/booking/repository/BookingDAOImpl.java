@@ -30,7 +30,7 @@ public class BookingDAOImpl implements BookingDAO {
 
         String sql = """
                 INSERT INTO booking (id, user_id, court_id, start_time, end_time, is_active)
-                VALUES (:id, :userId, :courtId, :startTime, :endTime, :is_active)
+                VALUES (:id, :userId, :courtId, :startTime, :endTime, :isActive)
                 """;
         return namedParameterJdbcTemplate.update(sql, params);
     }

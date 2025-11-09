@@ -42,6 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt = authHeader.substring(7);
         final String userEmail = jwtService.exctractUsername(jwt);
         final String role = jwtService.extractRole(jwt);
+        final String userId = jwtService.extractUserId(jwt);
+
 
         // Jei dar neprisijungęs vartotojas — sukurti authentication objektą
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

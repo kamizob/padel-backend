@@ -41,7 +41,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             SignUpFailedException.class,
             FailedCreateCourtException.class,
-            FailedUpdateCourtException.class
+            FailedUpdateCourtException.class,
+            FailedCreateBookingException.class
     })
     public ResponseEntity<Map<String, String>> handleServerError(RuntimeException ex) {
         return ResponseEntity

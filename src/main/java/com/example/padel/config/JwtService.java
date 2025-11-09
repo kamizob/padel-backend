@@ -29,10 +29,11 @@ public class JwtService {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    public String generateToken(String username, String role) {
+    public String generateToken(String userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        return createToken(claims, username);
+        claims.put("userId", userId);
+        return createToken(claims, email);
     }
     private String createToken(Map<String, Object> claims, String subject) {
         long now = System.currentTimeMillis();
@@ -59,6 +60,10 @@ public class JwtService {
     public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
+    }
+
 
 
 }
