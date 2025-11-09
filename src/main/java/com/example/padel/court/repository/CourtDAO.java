@@ -2,6 +2,7 @@ package com.example.padel.court.repository;
 
 import com.example.padel.court.domain.Court;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface CourtDAO {
@@ -10,4 +11,6 @@ public interface CourtDAO {
     int updateCourtActivity(String id, boolean isActive);
     Court findCourtById(String id);
     List<Court> findAll();
+    int updateCourtSchedule(String id, LocalTime openTime, LocalTime closeTime, int slotMinutes);
+
 }

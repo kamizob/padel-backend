@@ -81,6 +81,25 @@ public class CourtDAOImpl implements CourtDAO {
         String sql = "SELECT * FROM court ORDER BY created_at ASC";
         return namedParameterJdbcTemplate.query(sql, (rs, rowNum) -> mapRowToCourt(rs));
     }
+    @Override
+    public int updateCourtSchedule(String id, LocalTime openTime, LocalTime closeTime, int slotMinutes) {
+        String sql = """
+                UPDATE court
+                SET open_time = :openTime,
+                    close_time = :closeTime,
+                    slot_minutes = :slotMinutes,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+    """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("openTime", openTime)
+                .addValue("closeTime", closeTime)
+                .addValue("slotMinutes", slotMinutes);
+
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
 
 
 

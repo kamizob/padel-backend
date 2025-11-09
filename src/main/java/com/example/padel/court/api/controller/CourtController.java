@@ -2,11 +2,14 @@ package com.example.padel.court.api.controller;
 
 import com.example.padel.court.api.request.CreateCourtRequest;
 import com.example.padel.court.api.request.UpdateCourtRequest;
+import com.example.padel.court.api.request.UpdateCourtScheduleRequest;
 import com.example.padel.court.api.response.CreateCourtResponse;
 import com.example.padel.court.api.response.UpdateCourtResponse;
+import com.example.padel.court.api.response.UpdateCourtScheduleResponse;
 import com.example.padel.court.domain.Court;
 import com.example.padel.court.services.CourtService;
 import com.example.padel.court.services.CreateCourtService;
+import com.example.padel.court.services.UpdateCourtScheduleService;
 import com.example.padel.court.services.UpdateCourtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,12 +30,15 @@ public class CourtController {
     private final CourtService courtService;
     private final CreateCourtService createCourtService;
     private final UpdateCourtService updateCourtService;
+    private final UpdateCourtScheduleService updateCourtScheduleService;
 
     public CourtController(CourtService courtService,  CreateCourtService createCourtService,
-                           UpdateCourtService updateCourtService) {
+                           UpdateCourtService updateCourtService,
+                           UpdateCourtScheduleService updateCourtScheduleService) {
         this.courtService = courtService;
         this.createCourtService = createCourtService;
         this.updateCourtService = updateCourtService;
+        this.updateCourtScheduleService = updateCourtScheduleService;
     }
     @GetMapping
     public List<Court> getAllActiveCourts() {
@@ -59,6 +65,14 @@ public class CourtController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<Court> getAllCourts() {
         return courtService.getAllCourts();
+    }
+    @PatchMapping("/{id}/schedule")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UpdateCourtScheduleResponse updateCourtSchedule(
+            @PathVariable String id,
+            @RequestBody UpdateCourtScheduleRequest request
+    ) {
+        return updateCourtScheduleService.updateCourtSchedule(id, request);
     }
 
 
