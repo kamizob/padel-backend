@@ -12,5 +12,10 @@ public interface CourtDAO {
     Court findCourtById(String id);
     List<Court> findAll();
     int updateCourtSchedule(String id, LocalTime openTime, LocalTime closeTime, int slotMinutes);
+    int countCourts();
+    List<Court> findPaged(int page, int size);
+    List<Court> findPagedActive(int page, int size);
+    int countActiveCourts();
+
 
 }

@@ -19,10 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/courts")
@@ -66,6 +68,7 @@ public class CourtController {
     public List<Court> getAllCourts() {
         return courtService.getAllCourts();
     }
+
     @PatchMapping("/{id}/schedule")
     @PreAuthorize("hasRole('ADMIN')")
     public UpdateCourtScheduleResponse updateCourtSchedule(
@@ -73,6 +76,45 @@ public class CourtController {
             @RequestBody UpdateCourtScheduleRequest request
     ) {
         return updateCourtScheduleService.updateCourtSchedule(id, request);
+    }
+
+    @GetMapping("/paged")
+    @PreAuthorize("hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object> getPagedCourts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        List<Court> courts = courtService.getPagedCourts(page, size);
+        int totalCourts = courtService.getTotalCourtCount();
+        int totalPages = (int) Math.ceil((double) totalCourts / size);
+
+        return Map.of(
+                "courts", courts,
+                "page", page,
+                "size", size,
+                "totalPages", totalPages,
+                "totalCourts", totalCourts
+        );
+    }
+
+    @GetMapping("/active/paged")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Object> getPagedActiveCourts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        List<Court> courts = courtService.getPagedActiveCourts(page, size);
+        int totalCourts = courtService.getActiveCourtCount();
+        int totalPages = (int) Math.ceil((double) totalCourts / size);
+
+        return Map.of(
+                "courts", courts,
+                "page", page,
+                "size", size,
+                "totalPages", totalPages,
+                "totalCourts", totalCourts
+        );
     }
 
 

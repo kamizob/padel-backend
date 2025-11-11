@@ -100,6 +100,47 @@ public class CourtDAOImpl implements CourtDAO {
 
         return namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public List<Court> findPaged(int page, int size) {
+        String sql = """
+        SELECT * FROM court
+        ORDER BY created_at ASC
+        LIMIT :limit OFFSET :offset
+    """;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("limit", size)
+                .addValue("offset", (page - 1) * size);
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> mapRowToCourt(rs));
+    }
+
+    @Override
+    public int countCourts() {
+        String sql = "SELECT COUNT(*) FROM court";
+        return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+    }
+    @Override
+    public List<Court> findPagedActive(int page, int size) {
+        String sql = """
+        SELECT * FROM court
+        WHERE is_active = true
+        ORDER BY created_at ASC
+        LIMIT :limit OFFSET :offset
+    """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("limit", size)
+                .addValue("offset", (page - 1) * size);
+
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) -> mapRowToCourt(rs));
+    }
+
+    @Override
+    public int countActiveCourts() {
+        String sql = "SELECT COUNT(*) FROM court WHERE is_active = true";
+        return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
+    }
+
+
 
 
 

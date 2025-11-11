@@ -18,5 +18,21 @@ public class CourtService {
     public List<Court> getAllCourts() {
         return courtDAO.findAll();
     }
+    public List<Court> getPagedCourts(int page, int size) {
+        return courtDAO.findPaged(page, size);
+    }
+
+    public int getTotalCourtCount() {
+        return courtDAO.countCourts();
+    }
+    public List<Court> getPagedActiveCourts(int page, int size) {
+        return courtDAO.findPagedActive(page, size);
+    }
+
+    public int getActiveCourtCount() {
+        return courtDAO.countActiveCourts();
+    }
+
+
 
 }
