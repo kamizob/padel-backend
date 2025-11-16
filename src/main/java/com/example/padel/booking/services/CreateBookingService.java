@@ -1,5 +1,6 @@
 package com.example.padel.booking.services;
 
+import com.example.padel.authorization.repository.AuthDAO;
 import com.example.padel.booking.api.request.CreateBookingRequest;
 import com.example.padel.booking.api.response.CreateBookingResponse;
 import com.example.padel.booking.domain.Booking;
@@ -10,6 +11,8 @@ import com.example.padel.court.repository.CourtDAO;
 import com.example.padel.exception.custom.CourtNotFoundException;
 import com.example.padel.exception.custom.FailedCreateBookingException;
 import com.example.padel.exception.custom.InvalidCourtConfigurationException;
+import com.example.padel.exception.custom.UserNotFoundException;
+import com.example.padel.exception.custom.UserNotVerifiedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +27,14 @@ public class CreateBookingService {
     private final BookingDAO bookingDAO;
     private final CourtDAO courtDAO;
     private final JwtService jwtService;
+    private final AuthDAO authDAO;
 
-    public CreateBookingService(BookingDAO bookingDAO, CourtDAO courtDAO, JwtService jwtService) {
+    public CreateBookingService(BookingDAO bookingDAO, CourtDAO courtDAO, JwtService jwtService,
+                                AuthDAO authDAO) {
         this.bookingDAO = bookingDAO;
         this.courtDAO = courtDAO;
         this.jwtService = jwtService;
+        this.authDAO = authDAO;
     }
 
     public CreateBookingResponse createBooking(HttpServletRequest request, CreateBookingRequest bookingRequest) {
@@ -37,6 +43,14 @@ public class CreateBookingService {
         if (userId == null) {
             throw new RuntimeException("User not authenticated");
         }
+        var user = authDAO.findById(userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found");
+        }
+        if (!user.isVerified()) {
+            throw new UserNotVerifiedException("Please verify your email before booking!");
+        }
+
 
         Court court = courtDAO.findCourtById(bookingRequest.courtId());
         if (court == null || !court.isActive()) {

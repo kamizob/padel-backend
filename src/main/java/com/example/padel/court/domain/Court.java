@@ -1,9 +1,8 @@
 package com.example.padel.court.domain;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public record Court (
+public record Court(
         String id,
         String name,
         String location,
@@ -11,4 +10,5 @@ public record Court (
         LocalTime openingTime,
         LocalTime closingTime,
         int slotMinutes
-) {}
+) {
+}

@@ -51,6 +51,23 @@ public class AuthDAOImpl implements AuthDAO {
         MapSqlParameterSource params = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public User findById(String id) {
+        String sql = "SELECT * FROM app_user WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        return namedParameterJdbcTemplate.query(sql, params, (rs, rowNum) ->
+                new User(
+                        rs.getString("id"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        Role.valueOf(rs.getString("role")),
+                        rs.getBoolean("is_verified")
+                )
+        ).stream().findFirst().orElse(null);
+    }
 
 
 

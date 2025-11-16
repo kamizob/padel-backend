@@ -34,7 +34,7 @@ public class CourtController {
     private final UpdateCourtService updateCourtService;
     private final UpdateCourtScheduleService updateCourtScheduleService;
 
-    public CourtController(CourtService courtService,  CreateCourtService createCourtService,
+    public CourtController(CourtService courtService, CreateCourtService createCourtService,
                            UpdateCourtService updateCourtService,
                            UpdateCourtScheduleService updateCourtScheduleService) {
         this.courtService = courtService;
@@ -42,11 +42,13 @@ public class CourtController {
         this.updateCourtService = updateCourtService;
         this.updateCourtScheduleService = updateCourtScheduleService;
     }
+
     @GetMapping
     public List<Court> getAllActiveCourts() {
         return courtService.getAllActiveCourts();
 
     }
+
     @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,6 +65,7 @@ public class CourtController {
     ) {
         return updateCourtService.updateCourtActivity(courtId, request);
     }
+
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public List<Court> getAllCourts() {
@@ -117,7 +120,11 @@ public class CourtController {
         );
     }
 
-
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Court getCourtById(@PathVariable String id) {
+        return courtService.getCourtById(id);
+    }
 
 
 }

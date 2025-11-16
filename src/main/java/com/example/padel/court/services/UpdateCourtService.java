@@ -12,7 +12,7 @@ public class UpdateCourtService {
     private final CourtDAO courtDAO;
 
     public UpdateCourtService(CourtDAO courtDAO) {
-    this.courtDAO = courtDAO;
+        this.courtDAO = courtDAO;
     }
 
     public UpdateCourtResponse updateCourtActivity(String id, UpdateCourtRequest request) {

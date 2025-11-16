@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -19,6 +18,7 @@ public class CourtDAOImpl implements CourtDAO {
     public CourtDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
+
     @Override
     public List<Court> findAllActive() {
         String sql = """
@@ -29,6 +29,7 @@ public class CourtDAOImpl implements CourtDAO {
 
 
     }
+
     private Court mapRowToCourt(ResultSet rs) throws SQLException {
         return new Court(
                 rs.getString("id"),
@@ -44,24 +45,25 @@ public class CourtDAOImpl implements CourtDAO {
     @Override
     public int createCourt(Court court) {
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id",  court.id())
-                .addValue("name",  court.name())
-                .addValue("location",  court.location())
+                .addValue("id", court.id())
+                .addValue("name", court.name())
+                .addValue("location", court.location())
                 .addValue("is_active", court.isActive())
                 .addValue("open_time", court.openingTime())
                 .addValue("close_time", court.closingTime())
                 .addValue("slot_minutes", court.slotMinutes());
 
         String sql = """
-                INSERT INTO court (id, name, location, is_active, open_time, close_time, slot_minutes)
-                VALUES (:id, :name, :location, :is_active, :open_time, :close_time, :slot_minutes)
-        """;
+                        INSERT INTO court (id, name, location, is_active, open_time, close_time, slot_minutes)
+                        VALUES (:id, :name, :location, :is_active, :open_time, :close_time, :slot_minutes)
+                """;
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public int updateCourtActivity(String id, boolean isActive) {
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("id",  id)
+                .addValue("id", id)
                 .addValue("is_active", isActive);
         String sql = """
                 UPDATE court 
@@ -70,27 +72,30 @@ public class CourtDAOImpl implements CourtDAO {
                 WHERE id = :id""";
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public Court findCourtById(String id) {
         String sql = "SELECT * FROM court WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         return namedParameterJdbcTemplate.query(sql, params, rs -> rs.next() ? mapRowToCourt(rs) : null);
     }
+
     @Override
     public List<Court> findAll() {
         String sql = "SELECT * FROM court ORDER BY created_at ASC";
         return namedParameterJdbcTemplate.query(sql, (rs, rowNum) -> mapRowToCourt(rs));
     }
+
     @Override
     public int updateCourtSchedule(String id, LocalTime openTime, LocalTime closeTime, int slotMinutes) {
         String sql = """
-                UPDATE court
-                SET open_time = :openTime,
-                    close_time = :closeTime,
-                    slot_minutes = :slotMinutes,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = :id
-    """;
+                            UPDATE court
+                            SET open_time = :openTime,
+                                close_time = :closeTime,
+                                slot_minutes = :slotMinutes,
+                                updated_at = CURRENT_TIMESTAMP
+                            WHERE id = :id
+                """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", id)
@@ -100,13 +105,14 @@ public class CourtDAOImpl implements CourtDAO {
 
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public List<Court> findPaged(int page, int size) {
         String sql = """
-        SELECT * FROM court
-        ORDER BY created_at ASC
-        LIMIT :limit OFFSET :offset
-    """;
+                    SELECT * FROM court
+                    ORDER BY created_at ASC
+                    LIMIT :limit OFFSET :offset
+                """;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("limit", size)
                 .addValue("offset", (page - 1) * size);
@@ -118,14 +124,15 @@ public class CourtDAOImpl implements CourtDAO {
         String sql = "SELECT COUNT(*) FROM court";
         return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
     }
+
     @Override
     public List<Court> findPagedActive(int page, int size) {
         String sql = """
-        SELECT * FROM court
-        WHERE is_active = true
-        ORDER BY created_at ASC
-        LIMIT :limit OFFSET :offset
-    """;
+                    SELECT * FROM court
+                    WHERE is_active = true
+                    ORDER BY created_at ASC
+                    LIMIT :limit OFFSET :offset
+                """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("limit", size)
@@ -139,10 +146,6 @@ public class CourtDAOImpl implements CourtDAO {
         String sql = "SELECT COUNT(*) FROM court WHERE is_active = true";
         return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Integer.class);
     }
-
-
-
-
 
 
 }
