@@ -8,4 +8,5 @@ public interface BookingDAO {
     int create(Booking booking);
     List<Booking> findByUserId(String userId);
     List<Booking> findByCourtId(String courtId);
+    int cancelBooking(String bookingId, String userId);
 }

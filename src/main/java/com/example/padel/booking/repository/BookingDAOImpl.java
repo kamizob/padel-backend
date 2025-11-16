@@ -71,5 +71,19 @@ public class BookingDAOImpl implements BookingDAO {
                 rs.getBoolean("is_active")
         );
     }
+    @Override
+    public int cancelBooking(String bookingId, String userId) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", bookingId)
+                .addValue("userId", userId);
+        String sql = """
+                UPDATE booking
+                SET is_active = false
+                WHERE id = :id
+                AND user_id = :userId
+                AND is_active = true
+        """;
+        return namedParameterJdbcTemplate.update(sql, params);
+    }
 
 }
