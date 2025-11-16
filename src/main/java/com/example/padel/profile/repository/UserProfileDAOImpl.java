@@ -1,5 +1,6 @@
 package com.example.padel.profile.repository;
 
+import com.example.padel.profile.api.response.UserProfileResponse;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,31 @@ public class UserProfileDAOImpl implements UserProfileDAO {
         return namedParameterJdbcTemplate.update(sql.toString(), params);
 
     }
+    @Override
+    public UserProfileResponse findProfileById(String userId) {
+        String sql = """
+        SELECT id, email, first_name, last_name, role, is_verified
+        FROM app_user
+        WHERE id = :id
+    """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource("id", userId);
+
+        return namedParameterJdbcTemplate.query(sql, params, rs -> {
+            if (rs.next()) {
+                return new UserProfileResponse(
+                        rs.getString("id"),
+                        rs.getString("email"),
+                        rs.getString("first_name"),
+                        rs.getString("last_name"),
+                        rs.getString("role"),
+                        rs.getBoolean("is_verified")
+                );
+            }
+            return null;
+        });
+    }
+
 
 
 }
