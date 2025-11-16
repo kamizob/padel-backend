@@ -29,7 +29,8 @@ public class GlobalExceptionHandler {
             UserNotVerifiedException.class,
             InvalidPasswordException.class,
             CourtNotFoundException.class,
-            InvalidCourtConfigurationException.class
+            InvalidCourtConfigurationException.class,
+            InvalidUpdateProfileRequestException.class
     })
     public ResponseEntity<Map<String, String>> handleBadRequest(RuntimeException ex) {
         return ResponseEntity
@@ -43,7 +44,8 @@ public class GlobalExceptionHandler {
             FailedCreateCourtException.class,
             FailedUpdateCourtException.class,
             FailedCreateBookingException.class,
-            FailedCancelBookingException.class
+            FailedCancelBookingException.class,
+            FailedUpdateProfileException.class
     })
     public ResponseEntity<Map<String, String>> handleServerError(RuntimeException ex) {
         return ResponseEntity
