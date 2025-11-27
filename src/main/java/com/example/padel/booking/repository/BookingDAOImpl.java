@@ -85,5 +85,25 @@ public class BookingDAOImpl implements BookingDAO {
         """;
         return namedParameterJdbcTemplate.update(sql, params);
     }
+    @Override
+    public List<Booking> findUpcomingActiveBookings(LocalDateTime now, LocalDateTime threeHoursLater) {
+        String sql = """
+        SELECT * FROM booking
+        WHERE is_active = true
+          AND reminder_sent = false
+          AND start_time BETWEEN :now AND :threeHoursLater
+    """;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("now", now)
+                .addValue("threeHoursLater", threeHoursLater);
+        return namedParameterJdbcTemplate.query(sql, params, this::mapRow);
+    }
+
+    @Override
+    public int markReminderSent(String bookingId) {
+        String sql = "UPDATE booking SET reminder_sent = true WHERE id = :id";
+        return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", bookingId));
+    }
+
 
 }

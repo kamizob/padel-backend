@@ -58,6 +58,11 @@ public class CreateBookingService {
         }
         LocalDateTime startTime = bookingRequest.startTime();
         LocalDateTime endTime = bookingRequest.endTime();
+        if (startTime.isBefore(LocalDateTime.now())) {
+            throw new InvalidCourtConfigurationException("Cannot create booking in the past.");
+        }
+
+
 
         if(startTime == null || endTime == null || !endTime.isAfter(startTime)) {
             throw  new InvalidCourtConfigurationException("Start and end time are not valid");

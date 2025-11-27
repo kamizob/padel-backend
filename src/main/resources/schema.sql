@@ -23,8 +23,6 @@ CREATE TABLE court
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CHECK (close_time > open_time)
 );
-INSERT INTO court (id, name, location, open_time, close_time, slot_minutes)
-VALUES ('1', 'Court 1', 'Vilnius', '08:00:00', '22:00:00', 60);
 
 CREATE TABLE booking
 (
@@ -35,5 +33,8 @@ CREATE TABLE booking
      end_time TIMESTAMP NOT NULL,
      is_active BOOLEAN DEFAULT TRUE,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-     UNIQUE (court_id, start_time)
+     reminder_sent BOOLEAN DEFAULT FALSE
 );
+CREATE UNIQUE INDEX booking_unique_active
+    ON booking (court_id, start_time, end_time)
+    WHERE is_active = true;

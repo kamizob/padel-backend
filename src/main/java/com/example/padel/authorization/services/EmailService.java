@@ -22,4 +22,14 @@ public class EmailService {
         mailSender.send(message);
 
     }
+
+    public void sendCustomEmail(String to, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+        message.setFrom("respadel.app@gmail.com");
+        mailSender.send(message);
+    }
+
 }
