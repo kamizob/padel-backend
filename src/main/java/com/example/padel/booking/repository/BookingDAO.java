@@ -13,4 +13,8 @@ public interface BookingDAO {
 
     List<Booking> findUpcomingActiveBookings(LocalDateTime now, LocalDateTime oneHourLater);
     int markReminderSent(String bookingId);
+
+    List<Booking> findByUserIdPaged(String userId, int offset, int limit);
+    long countByUserId(String userId);
+
 }

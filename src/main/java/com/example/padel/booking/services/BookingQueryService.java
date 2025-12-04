@@ -1,6 +1,7 @@
 package com.example.padel.booking.services;
 
 import com.example.padel.booking.api.response.MyBookingResponse;
+import com.example.padel.booking.api.response.PagedBookingResponse;
 import com.example.padel.booking.domain.Booking;
 import com.example.padel.booking.repository.BookingDAO;
 import com.example.padel.config.JwtService;
@@ -24,7 +25,7 @@ public class BookingQueryService {
         this.jwtService = jwtService;
     }
 
-    public List<MyBookingResponse> getBookingsForCurrentUser(HttpServletRequest request) {
+    public PagedBookingResponse getBookingsForCurrentUser(HttpServletRequest request, int page, int size) {
         String token = request.getHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
             throw new RuntimeException("Missing or invalid Authorization header");
@@ -32,9 +33,14 @@ public class BookingQueryService {
 
         String userId = jwtService.extractUserId(token.substring(7));
 
-        List<Booking> bookings = bookingDAO.findByUserId(userId);
-        return bookings.stream()
-                .map(b -> {
+        int offset = page * size;
+
+        List<Booking> bookings = bookingDAO.findByUserIdPaged(userId, offset, size);
+        long total = bookingDAO.countByUserId(userId);
+        int totalPages = (int) Math.ceil((double) total / size);
+
+        List<MyBookingResponse> responseList = bookings.stream()
+                .map( b -> {
                     String courtName = "Unknown Court";
                     var court = courtDAO.findCourtById(b.courtId());
                     if (court != null) {
@@ -48,7 +54,16 @@ public class BookingQueryService {
                             b.endTime(),
                             b.isActive()
                     );
-                })
+        })
                 .toList();
+
+        return new PagedBookingResponse(
+                responseList,
+                page,
+                size,
+                total,
+                totalPages
+        );
+
     }
 }

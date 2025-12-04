@@ -105,5 +105,37 @@ public class BookingDAOImpl implements BookingDAO {
         return namedParameterJdbcTemplate.update(sql, new MapSqlParameterSource("id", bookingId));
     }
 
+    @Override
+    public List<Booking> findByUserIdPaged(String userId, int offset, int limit) {
+        String sql = """
+        SELECT * FROM booking
+        WHERE user_id = :userId
+        ORDER BY start_time DESC
+        LIMIT :limit OFFSET :offset
+        """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("userId", userId)
+                .addValue("limit", limit)
+                .addValue("offset", offset);
+
+        return namedParameterJdbcTemplate.query(sql, params, this::mapRow);
+    }
+
+    @Override
+    public long countByUserId(String userId) {
+        String sql = """
+        SELECT COUNT(*) FROM booking
+        WHERE user_id = :userId
+        """;
+
+        return namedParameterJdbcTemplate.queryForObject(
+                sql,
+                new MapSqlParameterSource("userId", userId),
+                Long.class
+        );
+    }
+
+
 
 }

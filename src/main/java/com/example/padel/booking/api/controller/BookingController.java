@@ -4,6 +4,7 @@ import com.example.padel.booking.api.request.CreateBookingRequest;
 import com.example.padel.booking.api.response.CancelBookingResponse;
 import com.example.padel.booking.api.response.CreateBookingResponse;
 import com.example.padel.booking.api.response.MyBookingResponse;
+import com.example.padel.booking.api.response.PagedBookingResponse;
 import com.example.padel.booking.services.BookingQueryService;
 import com.example.padel.booking.services.CancelBookingService;
 import com.example.padel.booking.services.CreateBookingService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,9 +48,14 @@ public class BookingController {
     }
     @GetMapping("/my")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<MyBookingResponse> getMyBookings(HttpServletRequest request) {
-        return bookingQueryService.getBookingsForCurrentUser(request);
+    public PagedBookingResponse getMyBookings(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return bookingQueryService.getBookingsForCurrentUser(request, page, size);
     }
+
 
     @PatchMapping("/{id}/cancel")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
