@@ -65,6 +65,13 @@ public class UserProfileDAOImpl implements UserProfileDAO {
             return null;
         });
     }
+    @Override
+    public String findPasswordHashByUserId(String userId) {
+        String sql = "SELECT password FROM app_user WHERE id = :id";
+        return namedParameterJdbcTemplate.query(sql,
+                new MapSqlParameterSource("id", userId),
+                rs -> rs.next() ? rs.getString("password") : null);
+    }
 
 
 

@@ -41,6 +41,13 @@ public class UpdateProfileService {
 
         String encodedPassword = null;
         if (request.newPassword() != null && !request.newPassword().isBlank()) {
+            if (request.oldPassword() == null || request.oldPassword().isBlank()) {
+                throw new InvalidUpdateProfileRequestException("Old password is required");
+            }
+
+            if (!passwordEncoder.matches(request.oldPassword(), userProfileDAO.findPasswordHashByUserId(userId))) {
+                throw new InvalidUpdateProfileRequestException("Old password is incorrect");
+            }
             encodedPassword = passwordEncoder.encode(request.newPassword());
         }
         int result = userProfileDAO.updateProfile(userId, request.firstName(), request.lastName(), encodedPassword);

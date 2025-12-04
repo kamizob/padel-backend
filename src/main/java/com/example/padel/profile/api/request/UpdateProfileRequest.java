@@ -9,6 +9,8 @@ public record UpdateProfileRequest(
         @Size(max = 100, message = "Last name is too long")
         String lastName,
 
+        String oldPassword,
+
         @Size(min = 6, max = 60, message = "Password must be 6–60 characters long")
         String newPassword
 ) {
