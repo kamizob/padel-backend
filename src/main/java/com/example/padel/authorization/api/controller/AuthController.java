@@ -1,5 +1,6 @@
 package com.example.padel.authorization.api.controller;
 
+import com.example.padel.authorization.api.request.AdminSignUpRequest;
 import com.example.padel.authorization.api.request.LoginRequest;
 import com.example.padel.authorization.api.request.SignUpRequest;
 import com.example.padel.authorization.api.response.LoginResponse;
@@ -46,9 +47,10 @@ public class AuthController {
     }
     @PostMapping("/signup/admin")
     @ResponseStatus(HttpStatus.CREATED)
-    public SignUpResponse signupAdmin(@Valid @RequestBody SignUpRequest signUpRequest) {
-        return signUpService.signUpAdmin(signUpRequest);
+    public SignUpResponse signupAdmin(@Valid @RequestBody AdminSignUpRequest adminSignUpRequest) {
+        return signUpService.signUpAdmin(adminSignUpRequest);
     }
+
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)

@@ -38,3 +38,10 @@ CREATE TABLE booking
 CREATE UNIQUE INDEX booking_unique_active
     ON booking (court_id, start_time, end_time)
     WHERE is_active = true;
+
+CREATE TABLE system_config (
+    id SERIAL PRIMARY KEY,
+    admin_initialized BOOLEAN DEFAULT FALSE
+);
+
+INSERT INTO system_config(admin_initialized) VALUES (FALSE);

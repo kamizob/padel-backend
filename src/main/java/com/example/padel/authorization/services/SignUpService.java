@@ -1,5 +1,6 @@
 package com.example.padel.authorization.services;
 
+import com.example.padel.authorization.api.request.AdminSignUpRequest;
 import com.example.padel.authorization.api.request.SignUpRequest;
 import com.example.padel.authorization.api.response.SignUpResponse;
 import com.example.padel.authorization.domain.User;
@@ -8,6 +9,8 @@ import com.example.padel.authorization.repository.AuthDAO;
 import com.example.padel.config.VerificationTokenService;
 import com.example.padel.exception.custom.EmailAlreadyExistsException;
 import com.example.padel.exception.custom.SignUpFailedException;
+import com.example.padel.system.repository.SystemConfigDAO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +23,21 @@ public class SignUpService {
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
     private final VerificationTokenService verificationTokenService;
+    private final SystemConfigDAO systemConfigDAO;
+
+    @Value("${admin.setup.code}")
+    private String setupCode;
+
 
     public SignUpService(AuthDAO authDAO, PasswordEncoder passwordEncoder, EmailService emailService,
-                         VerificationTokenService verificationTokenService) {
+                         VerificationTokenService verificationTokenService,  SystemConfigDAO systemConfigDAO) {
 
         this.authDAO = authDAO;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.verificationTokenService = verificationTokenService;
+        this.systemConfigDAO = systemConfigDAO;
+
     }
 
     public SignUpResponse createUser(SignUpRequest signUpRequest, Role role, boolean isVerified, String successMsg) {
@@ -63,8 +73,37 @@ public class SignUpService {
         return createUser(r, Role.USER, false, "Sign up successful! Please verify your email.");
     }
 
-    public SignUpResponse signUpAdmin(SignUpRequest r) {
-        return createUser(r, Role.ADMIN, true, "Admin account created successfully!");
+    public SignUpResponse signUpAdmin(AdminSignUpRequest r) {
+        if (systemConfigDAO.isAdminInitialized()) {
+            throw new RuntimeException("Admin account already initialized! Only the first admin can register via this endpoint.");
+        }
+        if (!r.setupCode().equals(setupCode)) {
+            throw new RuntimeException("Invalid admin setup code.");
+        }
+
+        String userId = UUID.randomUUID().toString();
+        User existing = authDAO.findByEmail(r.email());
+        if (existing != null) {
+            throw new EmailAlreadyExistsException("User with this email already exists!");
+        }
+        String password = passwordEncoder.encode(r.password());
+
+        User user = new User(
+                userId,
+                r.email(),
+                password,
+                r.firstName(),
+                r.lastName(),
+                Role.ADMIN,
+                true
+        );
+        int result = authDAO.signUp(user);
+        if (result != SUCCESS) {
+            throw new SignUpFailedException("Admin sign up failed.");
+        }
+
+        systemConfigDAO.markAdminInitialized();
+        return new SignUpResponse("Admin account created successfully!");
     }
 
 }
