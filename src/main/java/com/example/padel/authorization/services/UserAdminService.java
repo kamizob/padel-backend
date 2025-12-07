@@ -20,11 +20,14 @@ public class UserAdminService {
     }
     public void updateUserRole(String targetUserId, String newRole, Authentication auth) {
         User current = authDAO.findByEmail(auth.getName());
-        if (current.getRole() != Role.ADMIN) {
-            throw new RuntimeException("Only admin can change user roles.");
+        if (current == null) {
+            throw new RuntimeException("Authenticated user not found.");
+        }
+        if (current.getRole() != Role.SUPER_ADMIN) {
+            throw new RuntimeException("Only super admin can change user roles.");
         }
         if (current.getId().equals(targetUserId)) {
-            throw new RuntimeException("Admin cannot change their own role.");
+            throw new RuntimeException("Super-admin cannot change their own role.");
         }
         User target = authDAO.findById(targetUserId);
         if (target == null) {
@@ -35,6 +38,9 @@ public class UserAdminService {
             roleEnum = Role.valueOf(newRole.toUpperCase());
         } catch (Exception e) {
             throw new RuntimeException("Invalid role. Allowed: USER, ADMIN.");
+        }
+        if (roleEnum == Role.SUPER_ADMIN) {
+            throw new RuntimeException("Only SUPER_ADMIN can change user roles.");
         }
         int updated = authDAO.updateUserRole(targetUserId, roleEnum);
         if (updated != SUCCESS) {

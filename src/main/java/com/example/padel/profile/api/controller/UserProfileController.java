@@ -29,7 +29,7 @@ public class UserProfileController {
     }
 
     @PatchMapping("/profile")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UpdateProfileResponse updateProfile(
             @Valid  @RequestBody UpdateProfileRequest request,
@@ -39,7 +39,7 @@ public class UserProfileController {
 
     }
     @GetMapping("/me")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UserProfileResponse getCurrentUser(HttpServletRequest request) {
         return getProfileService.getProfile(request);

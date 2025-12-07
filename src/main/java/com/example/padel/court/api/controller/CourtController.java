@@ -50,14 +50,14 @@ public class CourtController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateCourtResponse createCourt(@RequestBody CreateCourtRequest request) {
         return createCourtService.createCourt(request);
     }
 
     @PatchMapping("/{courtId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UpdateCourtResponse updateCourtActivity(
             @PathVariable String courtId,
@@ -67,13 +67,13 @@ public class CourtController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public List<Court> getAllCourts() {
         return courtService.getAllCourts();
     }
 
     @PatchMapping("/{id}/schedule")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public UpdateCourtScheduleResponse updateCourtSchedule(
             @PathVariable String id,
             @RequestBody UpdateCourtScheduleRequest request
@@ -82,7 +82,7 @@ public class CourtController {
     }
 
     @GetMapping("/paged")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getPagedCourts(
             @RequestParam(defaultValue = "1") int page,
@@ -102,6 +102,7 @@ public class CourtController {
     }
 
     @GetMapping("/active/paged")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Map<String, Object> getPagedActiveCourts(
             @RequestParam(defaultValue = "1") int page,
@@ -121,6 +122,7 @@ public class CourtController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public Court getCourtById(@PathVariable String id) {
         return courtService.getCourtById(id);

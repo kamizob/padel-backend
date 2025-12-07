@@ -80,6 +80,7 @@ public class SignUpService {
         if (!r.setupCode().equals(setupCode)) {
             throw new RuntimeException("Invalid admin setup code.");
         }
+        Role role = Role.SUPER_ADMIN;
 
         String userId = UUID.randomUUID().toString();
         User existing = authDAO.findByEmail(r.email());
@@ -94,7 +95,7 @@ public class SignUpService {
                 password,
                 r.firstName(),
                 r.lastName(),
-                Role.ADMIN,
+                role,
                 true
         );
         int result = authDAO.signUp(user);

@@ -61,7 +61,7 @@ public class AuthController {
         return signUpService.signUpAdmin(adminSignUpRequest);
     }
     @PostMapping("/role")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<String> updateRole(
             @Valid @RequestBody UpdateUserRoleRequest request,
             Authentication auth
@@ -101,7 +101,7 @@ public class AuthController {
     }
 
     @GetMapping("/users")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public PagedUsersResponse getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size

@@ -39,7 +39,7 @@ public class BookingController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     public CreateBookingResponse createBooking(
             HttpServletRequest request,
             @RequestBody CreateBookingRequest bookingRequest
@@ -47,7 +47,7 @@ public class BookingController {
         return createBookingService.createBooking(request, bookingRequest);
     }
     @GetMapping("/my")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     public PagedBookingResponse getMyBookings(
             HttpServletRequest request,
             @RequestParam(defaultValue = "0") int page,
@@ -58,7 +58,7 @@ public class BookingController {
 
 
     @PatchMapping("/{id}/cancel")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public CancelBookingResponse cancelBooking(
             @PathVariable("id") String bookingId,

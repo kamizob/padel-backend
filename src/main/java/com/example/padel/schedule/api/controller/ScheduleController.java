@@ -23,7 +23,7 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
     @GetMapping("/{courtId}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public ScheduleResponse getCourtSchedule(@PathVariable String courtId,
                                              @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
