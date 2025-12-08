@@ -78,7 +78,8 @@ public class BookingDAOImpl implements BookingDAO {
                 .addValue("userId", userId);
         String sql = """
                 UPDATE booking
-                SET is_active = false
+                SET is_active = false,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE id = :id
                 AND user_id = :userId
                 AND is_active = true

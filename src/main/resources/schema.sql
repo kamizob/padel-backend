@@ -33,6 +33,7 @@ CREATE TABLE booking
      end_time TIMESTAMP NOT NULL,
      is_active BOOLEAN DEFAULT TRUE,
      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
      reminder_sent BOOLEAN DEFAULT FALSE
 );
 CREATE UNIQUE INDEX booking_unique_active
