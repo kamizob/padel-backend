@@ -7,7 +7,6 @@ import com.example.padel.authorization.api.request.UpdateUserRoleRequest;
 import com.example.padel.authorization.api.response.LoginResponse;
 import com.example.padel.authorization.api.response.PagedUsersResponse;
 import com.example.padel.authorization.api.response.SignUpResponse;
-import com.example.padel.authorization.api.response.UserSummaryResponse;
 import com.example.padel.authorization.repository.AuthDAO;
 import com.example.padel.authorization.services.LoginService;
 import com.example.padel.authorization.services.SignUpService;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,7 +40,7 @@ public class AuthController {
     public AuthController(SignUpService signUpService, LoginService loginService,
                           VerificationTokenService verificationTokenService, AuthDAO authDAO,
                           UserAdminService userAdminService
-                          ) {
+    ) {
         this.signUpService = signUpService;
         this.loginService = loginService;
         this.verificationTokenService = verificationTokenService;
@@ -55,11 +53,13 @@ public class AuthController {
     public SignUpResponse signup(@Valid @RequestBody SignUpRequest signUpRequest) {
         return signUpService.signUp(signUpRequest);
     }
+
     @PostMapping("/signup/admin")
     @ResponseStatus(HttpStatus.CREATED)
     public SignUpResponse signupAdmin(@Valid @RequestBody AdminSignUpRequest adminSignUpRequest) {
         return signUpService.signUpAdmin(adminSignUpRequest);
     }
+
     @PostMapping("/role")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<String> updateRole(
@@ -69,7 +69,6 @@ public class AuthController {
         userAdminService.updateUserRole(request.userId(), request.newRole(), auth);
         return ResponseEntity.ok("Role updated successfully.");
     }
-
 
 
     @PostMapping("/login")
@@ -108,11 +107,6 @@ public class AuthController {
     ) {
         return userAdminService.getUsers(page, size);
     }
-
-
-
-
-
 
 
 }

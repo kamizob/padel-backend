@@ -27,6 +27,7 @@ public class BookingReminderService {
         this.emailService = emailService;
 
     }
+
     @Scheduled(fixedRate = 1800000)
     public void sendReminders() {
         LocalDateTime now = LocalDateTime.now();

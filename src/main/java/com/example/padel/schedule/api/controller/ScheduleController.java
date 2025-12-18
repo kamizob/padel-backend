@@ -22,6 +22,7 @@ public class ScheduleController {
     public ScheduleController(ScheduleService scheduleService) {
         this.scheduleService = scheduleService;
     }
+
     @GetMapping("/{courtId}")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)

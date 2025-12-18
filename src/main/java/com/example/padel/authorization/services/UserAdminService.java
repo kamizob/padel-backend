@@ -18,6 +18,7 @@ public class UserAdminService {
     public UserAdminService(AuthDAO authDAO) {
         this.authDAO = authDAO;
     }
+
     public void updateUserRole(String targetUserId, String newRole, Authentication auth) {
         User current = authDAO.findByEmail(auth.getName());
         if (current == null) {
@@ -49,6 +50,7 @@ public class UserAdminService {
 
 
     }
+
     public List<UserSummaryResponse> getAllUsers() {
         return authDAO.findAllUsers().stream()
                 .map(u -> new UserSummaryResponse(
@@ -61,6 +63,7 @@ public class UserAdminService {
                 ))
                 .toList();
     }
+
     public PagedUsersResponse getUsers(int page, int size) {
         int offset = page * size;
 

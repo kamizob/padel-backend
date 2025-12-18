@@ -40,7 +40,7 @@ public class BookingQueryService {
         int totalPages = (int) Math.ceil((double) total / size);
 
         List<MyBookingResponse> responseList = bookings.stream()
-                .map( b -> {
+                .map(b -> {
                     String courtName = "Unknown Court";
                     var court = courtDAO.findCourtById(b.courtId());
                     if (court != null) {
@@ -54,7 +54,7 @@ public class BookingQueryService {
                             b.endTime(),
                             b.isActive()
                     );
-        })
+                })
                 .toList();
 
         return new PagedBookingResponse(

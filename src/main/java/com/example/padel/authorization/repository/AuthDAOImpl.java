@@ -15,6 +15,7 @@ public class AuthDAOImpl implements AuthDAO {
     public AuthDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
+
     @Override
     public int signUp(User user) {
         MapSqlParameterSource params = new MapSqlParameterSource()
@@ -30,6 +31,7 @@ public class AuthDAOImpl implements AuthDAO {
                 VALUES (:id, :email, :password, :firstName, :lastName, :role, :isVerified)""";
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public User findByEmail(String email) {
         String sql = "SELECT * FROM app_user WHERE email = :email";
@@ -47,12 +49,14 @@ public class AuthDAOImpl implements AuthDAO {
                 )
         ).stream().findFirst().orElse(null);
     }
+
     @Override
     public int verifyUserByEmail(String email) {
         String sql = "UPDATE app_user SET is_verified = true WHERE email = :email";
         MapSqlParameterSource params = new MapSqlParameterSource("email", email);
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public User findById(String id) {
         String sql = "SELECT * FROM app_user WHERE id = :id";
@@ -70,13 +74,14 @@ public class AuthDAOImpl implements AuthDAO {
                 )
         ).stream().findFirst().orElse(null);
     }
+
     @Override
     public int updateUserRole(String userId, Role newRole) {
         String sql = """
-        UPDATE app_user
-        SET role = :role
-        WHERE id = :id
-    """;
+                    UPDATE app_user
+                    SET role = :role
+                    WHERE id = :id
+                """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("role", newRole.name())
@@ -84,6 +89,7 @@ public class AuthDAOImpl implements AuthDAO {
 
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public List<User> findAllUsers() {
         String sql = "SELECT * FROM app_user ORDER BY created_at ASC";
@@ -100,13 +106,14 @@ public class AuthDAOImpl implements AuthDAO {
                 )
         );
     }
+
     @Override
     public List<User> findAllPaged(int offset, int limit) {
         String sql = """
-        SELECT * FROM app_user
-        ORDER BY created_at ASC
-        LIMIT :limit OFFSET :offset
-    """;
+                    SELECT * FROM app_user
+                    ORDER BY created_at ASC
+                    LIMIT :limit OFFSET :offset
+                """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("limit", limit)
@@ -130,10 +137,6 @@ public class AuthDAOImpl implements AuthDAO {
         String sql = "SELECT COUNT(*) FROM app_user";
         return namedParameterJdbcTemplate.queryForObject(sql, new MapSqlParameterSource(), Long.class);
     }
-
-
-
-
 
 
 }

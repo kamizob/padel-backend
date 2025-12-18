@@ -63,9 +63,8 @@ public class CreateBookingService {
         }
 
 
-
-        if(startTime == null || endTime == null || !endTime.isAfter(startTime)) {
-            throw  new InvalidCourtConfigurationException("Start and end time are not valid");
+        if (startTime == null || endTime == null || !endTime.isAfter(startTime)) {
+            throw new InvalidCourtConfigurationException("Start and end time are not valid");
 
         }
         List<Booking> existingBookings = bookingDAO.findByCourtId(bookingRequest.courtId());
@@ -79,8 +78,8 @@ public class CreateBookingService {
         int startHour = startTime.getHour();
         int endHour = endTime.getHour();
 
-        if(startHour < court.openingTime().getHour() || endHour > court.closingTime().getHour()) {
-            throw  new InvalidCourtConfigurationException("Start and end time are not valid");
+        if (startHour < court.openingTime().getHour() || endHour > court.closingTime().getHour()) {
+            throw new InvalidCourtConfigurationException("Start and end time are not valid");
         }
         String bookingId = UUID.randomUUID().toString();
 

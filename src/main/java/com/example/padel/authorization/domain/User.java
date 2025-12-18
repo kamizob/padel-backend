@@ -11,7 +11,8 @@ public class User {
     private Role role;
     private boolean isVerified;
 
-    public User() {}
+    public User() {
+    }
 
 
     public User(String id, String email, String password, String firstName, String lastName, Role role, boolean isVerified) {

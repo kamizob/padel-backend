@@ -1,6 +1,18 @@
 package com.example.padel.exception;
 
-import com.example.padel.exception.custom.*;
+import com.example.padel.exception.custom.CourtNotFoundException;
+import com.example.padel.exception.custom.EmailAlreadyExistsException;
+import com.example.padel.exception.custom.FailedCancelBookingException;
+import com.example.padel.exception.custom.FailedCreateBookingException;
+import com.example.padel.exception.custom.FailedCreateCourtException;
+import com.example.padel.exception.custom.FailedUpdateCourtException;
+import com.example.padel.exception.custom.FailedUpdateProfileException;
+import com.example.padel.exception.custom.InvalidCourtConfigurationException;
+import com.example.padel.exception.custom.InvalidPasswordException;
+import com.example.padel.exception.custom.InvalidUpdateProfileRequestException;
+import com.example.padel.exception.custom.SignUpFailedException;
+import com.example.padel.exception.custom.UserNotFoundException;
+import com.example.padel.exception.custom.UserNotVerifiedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

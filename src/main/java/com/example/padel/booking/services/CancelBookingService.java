@@ -17,7 +17,8 @@ public class CancelBookingService {
         this.bookingDAO = bookingDAO;
         this.jwtService = jwtService;
     }
-    public CancelBookingResponse cancelBooking (String bookingId, HttpServletRequest request) {
+
+    public CancelBookingResponse cancelBooking(String bookingId, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {
             throw new RuntimeException("Missing Authorization header");

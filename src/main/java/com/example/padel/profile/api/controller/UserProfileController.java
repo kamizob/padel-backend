@@ -32,12 +32,13 @@ public class UserProfileController {
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public UpdateProfileResponse updateProfile(
-            @Valid  @RequestBody UpdateProfileRequest request,
+            @Valid @RequestBody UpdateProfileRequest request,
             HttpServletRequest httpRequest
     ) {
         return updateProfileService.updateProfile(request, httpRequest);
 
     }
+
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     @ResponseStatus(HttpStatus.OK)

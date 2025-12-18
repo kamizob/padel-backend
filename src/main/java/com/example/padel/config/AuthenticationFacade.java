@@ -11,11 +11,12 @@ public class AuthenticationFacade {
     public Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+
     public String getCurrentUserEmail(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         if (principal instanceof User) {
             return ((User) principal).getUsername();
         }
-       return null;
+        return null;
     }
 }

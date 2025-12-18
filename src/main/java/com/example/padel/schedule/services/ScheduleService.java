@@ -26,12 +26,13 @@ public class ScheduleService {
         this.courtDAO = courtDAO;
         this.bookingDAO = bookingDAO;
     }
+
     public ScheduleResponse getCourtSchedule(String id, LocalDate date) {
         Court court = courtDAO.findCourtById(id);
         if (court == null) {
             throw new CourtNotFoundException("Court not found with id " + id);
         }
-        List <String> allSlots = generateSlots(court.openingTime(), court.closingTime(), court.slotMinutes());
+        List<String> allSlots = generateSlots(court.openingTime(), court.closingTime(), court.slotMinutes());
 
         List<Booking> bookings = bookingDAO.findByCourtId(court.id()).stream()
                 .filter(Booking::isActive)
@@ -54,6 +55,7 @@ public class ScheduleService {
         return new ScheduleResponse(court.id(), court.name(), availableSlots);
 
     }
+
     private List<String> generateSlots(LocalTime open, LocalTime close, int slotMinutes) {
         List<String> slots = new ArrayList<>();
         LocalTime current = open;

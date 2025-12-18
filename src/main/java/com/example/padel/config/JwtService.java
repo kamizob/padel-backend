@@ -25,16 +25,19 @@ public class JwtService {
     public String exctractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     public String generateToken(String userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("userId", userId);
         return createToken(claims, email);
     }
+
     private String createToken(Map<String, Object> claims, String subject) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
@@ -45,6 +48,7 @@ public class JwtService {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -57,13 +61,14 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
     public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
+
     public String extractUserId(String token) {
         return extractClaim(token, claims -> claims.get("userId", String.class));
     }
-
 
 
 }

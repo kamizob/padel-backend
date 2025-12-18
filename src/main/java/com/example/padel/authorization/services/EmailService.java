@@ -17,7 +17,7 @@ public class EmailService {
         message.setTo(toEmail);
         message.setSubject("Padel Account Verification");
         message.setText("Sveiki, \n\nNorėdami aktyvuoti savo paskyrą rezervacijų kūrimui, paspauskite šią nuorodą:\n\n"
-        + verificationLink + "\n\nDėkojame, \nPadelio komanda");
+                + verificationLink + "\n\nDėkojame, \nPadelio komanda");
         message.setFrom("respadel.app@gmail.com");
         mailSender.send(message);
 

@@ -3,7 +3,6 @@ package com.example.padel.booking.api.controller;
 import com.example.padel.booking.api.request.CreateBookingRequest;
 import com.example.padel.booking.api.response.CancelBookingResponse;
 import com.example.padel.booking.api.response.CreateBookingResponse;
-import com.example.padel.booking.api.response.MyBookingResponse;
 import com.example.padel.booking.api.response.PagedBookingResponse;
 import com.example.padel.booking.services.BookingQueryService;
 import com.example.padel.booking.services.CancelBookingService;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/bookings")
 public class BookingController {
@@ -37,6 +34,7 @@ public class BookingController {
         this.bookingQueryService = bookingQueryService;
         this.cancelBookingService = cancelBookingService;
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
@@ -46,6 +44,7 @@ public class BookingController {
     ) {
         return createBookingService.createBooking(request, bookingRequest);
     }
+
     @GetMapping("/my")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN')")
     public PagedBookingResponse getMyBookings(

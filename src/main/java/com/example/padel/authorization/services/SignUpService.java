@@ -30,7 +30,7 @@ public class SignUpService {
 
 
     public SignUpService(AuthDAO authDAO, PasswordEncoder passwordEncoder, EmailService emailService,
-                         VerificationTokenService verificationTokenService,  SystemConfigDAO systemConfigDAO) {
+                         VerificationTokenService verificationTokenService, SystemConfigDAO systemConfigDAO) {
 
         this.authDAO = authDAO;
         this.passwordEncoder = passwordEncoder;
@@ -61,7 +61,7 @@ public class SignUpService {
         if (result != SUCCESS) {
             throw new SignUpFailedException("Sign up failed. Please try again later.");
         }
-        if(!isVerified) {
+        if (!isVerified) {
             String token = verificationTokenService.generateVerificationToken(user.getEmail());
             String link = "http://localhost:8080/api/auth/verify?token=" + token;
             emailService.sendVerificationEmail(user.getEmail(), link);
@@ -69,6 +69,7 @@ public class SignUpService {
 
         return new SignUpResponse(successMsg);
     }
+
     public SignUpResponse signUp(SignUpRequest r) {
         return createUser(r, Role.USER, false, "Sign up successful! Please verify your email.");
     }

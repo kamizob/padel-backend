@@ -19,9 +19,11 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -35,6 +37,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

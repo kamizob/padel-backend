@@ -35,7 +35,7 @@ public class UpdateProfileService {
             throw new UserNotFoundException("User not authenticated");
         }
 
-        if(request.firstName() == null && request.lastName() == null && request.newPassword() == null){
+        if (request.firstName() == null && request.lastName() == null && request.newPassword() == null) {
             throw new InvalidUpdateProfileRequestException("At least one of the fields is required");
         }
 

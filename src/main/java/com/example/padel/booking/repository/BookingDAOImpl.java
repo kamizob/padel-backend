@@ -40,22 +40,23 @@ public class BookingDAOImpl implements BookingDAO {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("userId", userId);
         String sql = """
-                SELECT * FROM booking
-                WHERE user_id = :userId
-                ORDER BY start_time ASC
-        """;
+                        SELECT * FROM booking
+                        WHERE user_id = :userId
+                        ORDER BY start_time ASC
+                """;
         return namedParameterJdbcTemplate.query(sql, params, this::mapRow);
 
     }
+
     @Override
     public List<Booking> findByCourtId(String courtId) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("courtId", courtId);
         String sql = """
-                SELECT * FROM booking
-                WHERE court_id = :courtId
-                AND is_active = true
-        """;
+                        SELECT * FROM booking
+                        WHERE court_id = :courtId
+                        AND is_active = true
+                """;
         return namedParameterJdbcTemplate.query(sql, params, this::mapRow);
 
     }
@@ -71,29 +72,31 @@ public class BookingDAOImpl implements BookingDAO {
                 rs.getBoolean("is_active")
         );
     }
+
     @Override
     public int cancelBooking(String bookingId, String userId) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("id", bookingId)
                 .addValue("userId", userId);
         String sql = """
-                UPDATE booking
-                SET is_active = false,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = :id
-                AND user_id = :userId
-                AND is_active = true
-        """;
+                        UPDATE booking
+                        SET is_active = false,
+                            updated_at = CURRENT_TIMESTAMP
+                        WHERE id = :id
+                        AND user_id = :userId
+                        AND is_active = true
+                """;
         return namedParameterJdbcTemplate.update(sql, params);
     }
+
     @Override
     public List<Booking> findUpcomingActiveBookings(LocalDateTime now, LocalDateTime threeHoursLater) {
         String sql = """
-        SELECT * FROM booking
-        WHERE is_active = true
-          AND reminder_sent = false
-          AND start_time BETWEEN :now AND :threeHoursLater
-    """;
+                    SELECT * FROM booking
+                    WHERE is_active = true
+                      AND reminder_sent = false
+                      AND start_time BETWEEN :now AND :threeHoursLater
+                """;
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("now", now)
                 .addValue("threeHoursLater", threeHoursLater);
@@ -109,11 +112,11 @@ public class BookingDAOImpl implements BookingDAO {
     @Override
     public List<Booking> findByUserIdPaged(String userId, int offset, int limit) {
         String sql = """
-        SELECT * FROM booking
-        WHERE user_id = :userId
-        ORDER BY start_time DESC
-        LIMIT :limit OFFSET :offset
-        """;
+                SELECT * FROM booking
+                WHERE user_id = :userId
+                ORDER BY start_time DESC
+                LIMIT :limit OFFSET :offset
+                """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("userId", userId)
@@ -126,9 +129,9 @@ public class BookingDAOImpl implements BookingDAO {
     @Override
     public long countByUserId(String userId) {
         String sql = """
-        SELECT COUNT(*) FROM booking
-        WHERE user_id = :userId
-        """;
+                SELECT COUNT(*) FROM booking
+                WHERE user_id = :userId
+                """;
 
         return namedParameterJdbcTemplate.queryForObject(
                 sql,
@@ -136,7 +139,6 @@ public class BookingDAOImpl implements BookingDAO {
                 Long.class
         );
     }
-
 
 
 }

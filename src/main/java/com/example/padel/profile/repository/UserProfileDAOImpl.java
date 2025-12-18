@@ -12,6 +12,7 @@ public class UserProfileDAOImpl implements UserProfileDAO {
     public UserProfileDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
+
     @Override
     public int updateProfile(String userId, String firstName, String lastName, String encodedPassword) {
         StringBuilder sql = new StringBuilder("UPDATE app_user SET ");
@@ -41,13 +42,14 @@ public class UserProfileDAOImpl implements UserProfileDAO {
         return namedParameterJdbcTemplate.update(sql.toString(), params);
 
     }
+
     @Override
     public UserProfileResponse findProfileById(String userId) {
         String sql = """
-        SELECT id, email, first_name, last_name, role, is_verified
-        FROM app_user
-        WHERE id = :id
-    """;
+                    SELECT id, email, first_name, last_name, role, is_verified
+                    FROM app_user
+                    WHERE id = :id
+                """;
 
         MapSqlParameterSource params = new MapSqlParameterSource("id", userId);
 
@@ -65,6 +67,7 @@ public class UserProfileDAOImpl implements UserProfileDAO {
             return null;
         });
     }
+
     @Override
     public String findPasswordHashByUserId(String userId) {
         String sql = "SELECT password FROM app_user WHERE id = :id";
@@ -72,7 +75,6 @@ public class UserProfileDAOImpl implements UserProfileDAO {
                 new MapSqlParameterSource("id", userId),
                 rs -> rs.next() ? rs.getString("password") : null);
     }
-
 
 
 }

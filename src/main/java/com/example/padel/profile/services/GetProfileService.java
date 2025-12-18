@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GetProfileService {
-    private final UserProfileDAO  userProfileDAO;
+    private final UserProfileDAO userProfileDAO;
     private final JwtService jwtService;
 
     public GetProfileService(UserProfileDAO userProfileDAO, JwtService jwtService) {
         this.userProfileDAO = userProfileDAO;
         this.jwtService = jwtService;
     }
+
     public UserProfileResponse getProfile(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token == null || !token.startsWith("Bearer ")) {

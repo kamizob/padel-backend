@@ -18,17 +18,18 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public LoginService(AuthDAO authDAO, PasswordEncoder passwordEncoder,  JwtService jwtService) {
+    public LoginService(AuthDAO authDAO, PasswordEncoder passwordEncoder, JwtService jwtService) {
         this.authDAO = authDAO;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
+
     public LoginResponse login(LoginRequest request) {
         User user = authDAO.findByEmail(request.email());
         if (user == null) {
             throw new UserNotFoundException("User not found with email: " + request.email());
         }
-        if(!user.isVerified()) {
+        if (!user.isVerified()) {
             throw new UserNotVerifiedException("Please verify your email before logging in!");
         }
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
